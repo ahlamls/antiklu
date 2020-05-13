@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "285482769728",
+    "firebase_url": "https://antikl.firebaseio.com",
+    "project_id": "antikl",
+    "storage_bucket": "antikl.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:285482769728:android:48af46ef012103b824eea5",
+        "android_client_info": {
+          "package_name": "com.antiklu.aplikasi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "285482769728-hkqs4h6un5ec0tpd6kf9a4g19loo48im.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.antiklu.aplikasi",
+            "certificate_hash": "32c348b3ad0d16c32d8c3f3ea872191772dee26e"
+          }
+        },
+        {
+          "client_id": "285482769728-deaphuhlk8vrc7ivttpj6aahuo6kngk9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvZC6urpz2gZAkKISyqWEMboPiblc5-dI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "285482769728-deaphuhlk8vrc7ivttpj6aahuo6kngk9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
