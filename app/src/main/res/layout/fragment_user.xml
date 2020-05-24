@@ -60,8 +60,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/antikluapplogo" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/textView9"
@@ -74,7 +73,7 @@
                 android:textColor="#000000"
                 android:layout_height="wrap_content"
 
-                android:text="Nama Lengkap" />
+                android:text="Loading..." />
 
             <TextView
                 android:id="@+id/textView10"
@@ -86,7 +85,9 @@
                 android:textSize="13sp"
                 android:layout_marginLeft="10dp"
                 android:layout_height="wrap_content"
-                android:text="kontolkuda69@gmail.com" />
+                android:text="Loading..." />
+
+
             <TextView
                 android:id="@+id/textView11"
                 android:layout_width="0dp"
@@ -98,7 +99,7 @@
                 android:layout_marginLeft="10dp"
                 android:textColor="#000000"
                 android:layout_height="wrap_content"
-                android:text="Saldo : 0" />
+                android:text="Saldo : Loading.." />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
