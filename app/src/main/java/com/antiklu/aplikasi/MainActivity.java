@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.antiklu.aplikasi.prakmen.AccountFragment;
 import com.antiklu.aplikasi.prakmen.HomeFragment;
 import com.antiklu.aplikasi.settings.Client;
 import com.antiklu.aplikasi.settings.Server;
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         Boolean session = false;
 
 
-        String fuid;
+        String fuid,latitude,longitude;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,11 +44,15 @@ public class MainActivity extends AppCompatActivity {
         sharedpreferences = getSharedPreferences(my_shared_preferences, Context.MODE_PRIVATE);
         session = sharedpreferences.getBoolean("login", false);
         fuid = sharedpreferences.getString("fuid",null);
+        latitude = sharedpreferences.getString("latitude",null);
+        longitude = sharedpreferences.getString("longitude",null);
         if (!session) {
             Intent intent = new Intent(getApplicationContext(), SpawnActivity.class);
             finish();
             startActivity(intent);
         }
+
+        setorLokasi();
 
         handlePostRegistration();
     }
@@ -118,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = Server.URL + "update.php?id=" + Client.bangsatkau(fuid) + "&v=" + Client.bangsatkau(Client.APP_VERSION);
+        String url = Server.URL + "setorlokasi.php?id=" + Client.bangsatkau(fuid) + "&latitude=" + Client.bangsatkau(latitude) + "&longitude=" + Client.bangsatkau(longitude);
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -133,27 +139,23 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             JSONObject jObj = new JSONObject(response);
                             int success = jObj.getInt("success");
-                            String url = jObj.getString("url");
-                            int uptodate = jObj.getInt("uptodate");
                             String message = jObj.getString("message");
 
                             // Display the first 500 characters of the response string.
 
                             if (success == 1) {
 
-                                if (uptodate == 1) {
-                                    initFragment();
-                                } else {
-                                    showUpdateDialog(message,url);
-                                }
+
 
                             } else {
-                                showExitDialog("Gagal Cek Update . " + message);
+                                Toast.makeText(getApplicationContext(),
+                                        "Gagal Update Lokasi" + message , Toast.LENGTH_LONG).show();
                             }
 
 
                         } catch (JSONException e) {
-                            showExitDialog("Kesalahan Parsing . " + e.toString());
+                            Toast.makeText(getApplicationContext(),
+                                    "Gagal Parsing " + e.toString(), Toast.LENGTH_LONG).show();
                         }
 
 
@@ -162,7 +164,8 @@ public class MainActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                showExitDialog("Gagal Mengakses Server . 21 " + error.toString());
+                Toast.makeText(getApplicationContext(),
+                        "Gagal Mengakses Server" + error.toString(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -170,6 +173,67 @@ public class MainActivity extends AppCompatActivity {
         queue.add(stringRequest);
 
     }
+
+    void setorLokasi() {
+
+            final TextView textView = (TextView) findViewById(R.id.text);
+            // cek apdet dan banned
+
+            // Instantiate the RequestQueue.
+            RequestQueue queue = Volley.newRequestQueue(this);
+            String url = Server.URL + "update.php?id=" + Client.bangsatkau(fuid) + "&v=" + Client.bangsatkau(Client.APP_VERSION);
+
+            // Request a string response from the provided URL.
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            // Display the first 500 characters of the response string.
+                            //if banned/apdet
+                            // showUpdateDialog(message,url);
+                            //if gagal
+
+                            try {
+                                JSONObject jObj = new JSONObject(response);
+                                int success = jObj.getInt("success");
+                                String url = jObj.getString("url");
+                                int uptodate = jObj.getInt("uptodate");
+                                String message = jObj.getString("message");
+
+                                // Display the first 500 characters of the response string.
+
+                                if (success == 1) {
+
+                                    if (uptodate == 1) {
+                                        initFragment();
+                                    } else {
+                                        showUpdateDialog(message,url);
+                                    }
+
+                                } else {
+                                    showExitDialog("Gagal Cek Update . " + message);
+                                }
+
+
+                            } catch (JSONException e) {
+                                showExitDialog("Kesalahan Parsing . " + e.toString());
+                            }
+
+
+
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    showExitDialog("Gagal Mengakses Server . 21 " + error.toString());
+                }
+            });
+
+            // Add the request to the RequestQueue.
+            queue.add(stringRequest);
+
+        }
+
 
     private void showUpdateDialog(final String message,final String url){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -262,6 +326,10 @@ public class MainActivity extends AppCompatActivity {
         Fragment myFragment2 = getSupportFragmentManager().findFragmentByTag("account");
         if (myFragment2 != null && myFragment2.isVisible()) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, new HomeFragment(), "home").commit();
+        }
+        Fragment myFragment3 = getSupportFragmentManager().findFragmentByTag("backtoaccount");
+        if (myFragment3 != null && myFragment3.isVisible()) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, new AccountFragment(), "account").commit();
         }
 //        Fragment myFragment3 = getSupportFragmentManager().findFragmentByTag("refferalnews");
 //        if (myFragment3 != null && myFragment3.isVisible()) {

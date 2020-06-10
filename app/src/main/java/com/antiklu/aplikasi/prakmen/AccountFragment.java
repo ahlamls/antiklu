@@ -109,33 +109,45 @@ public class AccountFragment extends Fragment {
         alamat_btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-//                HomeFragment fragment2 = new HomeFragment();
-//                getActivity().getSupportFragmentManager()
-//                        .beginTransaction()
-//                        .replace(R.id.fl_container, fragment2,"backtoaccount")
-//                        .commit();
+                AlamatFragment fragment2 = new AlamatFragment();
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fl_container, fragment2,"backtoaccount")
+                        .commit();
             }
         });
 
         order_btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-//                HomeFragment fragment2 = new HomeFragment();
-//                getActivity().getSupportFragmentManager()
-//                        .beginTransaction()
-//                        .replace(R.id.fl_container, fragment2,"backtoaccount")
-//                        .commit();
+                OrderFragment fragment2 = new OrderFragment();
+
+                Bundle bundle = new Bundle();
+
+                bundle.putString("type", "micro");
+                fragment2.setArguments(bundle);
+
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fl_container, fragment2,"backtoaccount")
+                        .commit();
             }
         });
 
         history_btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-//                HomeFragment fragment2 = new HomeFragment();
-//                getActivity().getSupportFragmentManager()
-//                        .beginTransaction()
-//                        .replace(R.id.fl_container, fragment2,"backtoaccount")
-//                        .commit();
+                OrderFragment fragment2 = new OrderFragment();
+
+                Bundle bundle = new Bundle();
+
+                bundle.putString("type", "c");
+                fragment2.setArguments(bundle);
+
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fl_container, fragment2,"backtoaccount")
+                        .commit();
             }
         });
 

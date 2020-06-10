@@ -176,7 +176,6 @@ public class HomeFragment extends Fragment {
 
                 } catch(JSONException e){
                     // JSON error
-                    progressBar.setVisibility(View.GONE);
                     Toast.makeText(getActivity(), "Gagal Parsing " + e.toString(), Toast.LENGTH_LONG).show();
                 }
 
@@ -186,7 +185,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                progressBar.setVisibility(View.GONE);
+
                 Log.e("RankFrag", "Gagal Mendapatkan Daftar Gambar : " + error.getMessage());
                 Toast.makeText(getActivity(),
                         "Gagal Mendapatkan Daftar Gambar" + error.getMessage(), Toast.LENGTH_LONG).show();
@@ -258,7 +257,6 @@ public class HomeFragment extends Fragment {
 
                 } catch(JSONException e){
                     // JSON error
-                    progressBar.setVisibility(View.GONE);
                     Toast.makeText(getActivity(), "Gagal Parsing " + e.toString(), Toast.LENGTH_LONG).show();
                 }
 
@@ -268,7 +266,6 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                progressBar.setVisibility(View.GONE);
                 Log.e("RankFrag", "Gagal Mendapatkan Daftar Kategori : " + error.getMessage());
                 Toast.makeText(getActivity(),
                         "Gagal Mendapatkan Daftar Kategori" + error.getMessage(), Toast.LENGTH_LONG).show();
