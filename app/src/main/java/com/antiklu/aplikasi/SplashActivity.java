@@ -42,7 +42,7 @@ public class SplashActivity extends AppCompatActivity {
 
     void askPermission() {
         if(ContextCompat.checkSelfPermission(getApplicationContext(),
-                Manifest.permission.WRITE_CALENDAR)
+                Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED)
         {
             checkPermission(Manifest.permission.ACCESS_FINE_LOCATION,69);

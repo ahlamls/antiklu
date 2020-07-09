@@ -21,6 +21,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.antiklu.aplikasi.prakmen.AccountFragment;
 import com.antiklu.aplikasi.prakmen.HomeFragment;
+import com.antiklu.aplikasi.prakmen.OrderFragment;
 import com.antiklu.aplikasi.settings.Client;
 import com.antiklu.aplikasi.settings.Server;
 
@@ -305,6 +306,7 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+@Override
     public void onBackPressed() {
 //        if(USER_IS_GOING_TO_EXIT) {
 //            if(backtoast!=null&&backtoast.getView().getWindowToken()!=null) {
@@ -331,10 +333,10 @@ public class MainActivity extends AppCompatActivity {
         if (myFragment3 != null && myFragment3.isVisible()) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, new AccountFragment(), "account").commit();
         }
-//        Fragment myFragment3 = getSupportFragmentManager().findFragmentByTag("refferalnews");
-//        if (myFragment3 != null && myFragment3.isVisible()) {
-//            getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, new AccountFragment(), "home").commit();
-//        }
+        Fragment myFragment4 = getSupportFragmentManager().findFragmentByTag("backtoorder");
+        if (myFragment4 != null && myFragment4.isVisible()) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, new OrderFragment(), "backtoaccount").commit();
+        }
 
 
         //super.onBackPressed();

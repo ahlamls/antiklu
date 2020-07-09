@@ -137,9 +137,14 @@ public class OrderFragment extends Fragment {
                     JSONObject jObjx = new JSONObject(response);
                     int success = jObjx.getInt("success");
                     String message = jObjx.getString("message");
-                    String list = jObjx.getString("list");
-
-                    if (success == 1) {
+                    String list = "";
+                    try {
+                       list = jObjx.getString("list");
+                    } catch (JSONException e) {
+                        Toast.makeText(getActivity(), "Tidak ada Order", Toast.LENGTH_LONG).show();
+                        doneLoading();
+                    }
+                    if (success == 1 && !list.equals("")) {
                         JSONArray jObj = new JSONArray(list);
                         for (int i = 0; i < jObj.length(); i++) {
                             JSONObject row = jObj.getJSONObject(i);
@@ -161,11 +166,7 @@ public class OrderFragment extends Fragment {
 
                         // Log.e("Successfully Login!", jObj.toString());
 
-        if (type == "micro") {
-            title_tv.setText("Order Aktif");
-        } else if (type == "c") {
-            title_tv.setText("Sejarah Order");
-        }
+    doneLoading();
 
                         /*Toast.makeText(getActivity(),
                                 jObj.getString("ReffFrag"), Toast.LENGTH_LONG).show();*/
@@ -198,5 +199,13 @@ public class OrderFragment extends Fragment {
         // Adding request to request queue
         queue.add(strReq);
 
+    }
+
+    void doneLoading() {
+        if (type == "micro") {
+            title_tv.setText("Order Aktif");
+        } else if (type == "c") {
+            title_tv.setText("Sejarah Order");
+        }
     }
 }

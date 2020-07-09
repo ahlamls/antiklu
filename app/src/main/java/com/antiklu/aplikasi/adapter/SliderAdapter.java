@@ -36,7 +36,7 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.DaftarView
     @Override
     public void onBindViewHolder(DaftarViewHolder holder, int position) {
 
-        Picasso.get().load(Server.DATA_URL + dataList.get(position).getGambar()).into(holder.gambar_iv);
+        Picasso.get().load(Server.DATA_URL + "carousel/" + dataList.get(position).getGambar()).into(holder.gambar_iv);
         //HANDLE ONCLICK
     }
 

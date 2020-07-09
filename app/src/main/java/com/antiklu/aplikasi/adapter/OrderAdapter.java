@@ -1,15 +1,18 @@
 package com.antiklu.aplikasi.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.antiklu.aplikasi.R;
 import com.antiklu.aplikasi.model.OrderModel;
+import com.antiklu.aplikasi.prakmen.OrderStatusFragment;
 
 import java.util.ArrayList;
 
@@ -38,8 +41,25 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.DaftarViewHo
         holder.time_tv.setText(dataList.get(position).getTime());
         holder.status_tv.setText(dataList.get(position).getStatus());
 
-        String aidi = dataList.get(position).getId();
+        final String aidi = dataList.get(position).getId();
         //HANDLE ONCLICK
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+
+                Bundle bundle = new Bundle();
+
+                bundle.putString("aidi",aidi); // Put anything what you want
+
+                OrderStatusFragment fragment2 = new OrderStatusFragment();
+                fragment2.setArguments(bundle);
+
+                ((AppCompatActivity) mContext).getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fl_container, fragment2,"backtoorder")
+                        .commit();
+            }
+        });
     }
 
     @Override
