@@ -34,25 +34,23 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         sharedpreferences = getSharedPreferences(my_shared_preferences, Context.MODE_PRIVATE);
         session = sharedpreferences.getBoolean("login", false);
-         pd = new ProgressDialog(SplashActivity.this);
+        pd = new ProgressDialog(SplashActivity.this);
         askPermission();
 
-       //3000 L = 3 detik
+        //3000 L = 3 detik
     }
 
     void askPermission() {
-        if(ContextCompat.checkSelfPermission(getApplicationContext(),
+        if (ContextCompat.checkSelfPermission(getApplicationContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED)
-        {
-            checkPermission(Manifest.permission.ACCESS_FINE_LOCATION,69);
+                != PackageManager.PERMISSION_GRANTED) {
+            checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, 69);
         } else {
             getLocation();
         }
     }
 
-    public void checkPermission(String permission, int requestCode)
-    {
+    public void checkPermission(String permission, int requestCode) {
 
         // Checking if permission is not granted
         if (ContextCompat.checkSelfPermission(
@@ -62,10 +60,9 @@ public class SplashActivity extends AppCompatActivity {
             ActivityCompat
                     .requestPermissions(
                             SplashActivity.this,
-                            new String[] { permission },
+                            new String[]{permission},
                             requestCode);
-        }
-        else {
+        } else {
             getLocation();
         }
     }
@@ -73,8 +70,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
-                                           @NonNull int[] grantResults)
-    {
+                                           @NonNull int[] grantResults) {
         super
                 .onRequestPermissionsResult(requestCode,
                         permissions,
@@ -87,9 +83,8 @@ public class SplashActivity extends AppCompatActivity {
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 // Showing the toast message
-               getLocation();
-            }
-            else {
+                getLocation();
+            } else {
                 Toast.makeText(getApplicationContext(),
                         "Izin Lokasi Ditolak",
                         Toast.LENGTH_LONG)
@@ -103,16 +98,30 @@ public class SplashActivity extends AppCompatActivity {
         FusedLocationProviderClient mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         pd.setMessage("Mendapatkan Lokasi anda . Harap Menunggu");
         pd.show();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            Toast.makeText(getApplicationContext(),
+                    "Belum memiliki izin lokasi",
+                    Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
         mFusedLocation.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
                 pd.dismiss();
-                if (location != null){
+                if (location != null) {
 
                     SharedPreferences.Editor editor = sharedpreferences.edit();
 
                     editor.putString("latitude", String.valueOf(location.getLatitude()));
-                    editor.putString("longitude",String.valueOf(location.getLongitude()));
+                    editor.putString("longitude", String.valueOf(location.getLongitude()));
                     editor.commit();
                     Log.d("My Current location", "Lat : " + location.getLatitude() + " Long : " + location.getLongitude());
 
@@ -136,7 +145,7 @@ public class SplashActivity extends AppCompatActivity {
 
                     // Do it all with location
 
-                } else  {
+                } else {
                     Toast.makeText(getApplicationContext(),
                             "Gagal Mendapatkan Lokasi . Pastikan Lokasi di Setting diaktifkan untuk menggunakan aplikasi ini",
                             Toast.LENGTH_LONG).show();

@@ -5,23 +5,26 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.antiklu.aplikasi.R;
-import com.antiklu.aplikasi.model.CategoryModel;
-import com.antiklu.aplikasi.prakmen.RestoListFragment;
+import com.antiklu.aplikasi.model.RestoListModel;
+import com.antiklu.aplikasi.prakmen.RestoFragment;
+import com.antiklu.aplikasi.settings.Server;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.DaftarViewHolder> {
+public class RestoListAdapter extends RecyclerView.Adapter<RestoListAdapter.DaftarViewHolder> {
 
 
-    private ArrayList<CategoryModel> dataList;
+    private ArrayList<RestoListModel> dataList;
     Context mContext;
-    public CategoryAdapter(ArrayList<CategoryModel> dataList,Context context) {
+    public RestoListAdapter(ArrayList<RestoListModel> dataList,Context context) {
         this.dataList = dataList;
         this.mContext= context;
     }
@@ -30,26 +33,29 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Daftar
     @Override
     public DaftarViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.row_kategorilist, parent, false);
+        View view = layoutInflater.inflate(R.layout.row_restolist, parent, false);
         return new DaftarViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(DaftarViewHolder holder, int position) {
-        holder.text_tv.setText(dataList.get(position).getText());
+        holder.name_tv.setText(dataList.get(position).getName());
+        holder.desc_tv.setText(dataList.get(position).getDesc());
+        holder.range_tv.setText(dataList.get(position).getRange());
+        Picasso.get().load(Server.DATA_URL + "resto/" + dataList.get(position).getGambar()).into(holder.gambar_iv);
+
+
         final String aidi = dataList.get(position).getId();
         //HANDLE ONCLICK
-
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
 
                 Bundle bundle = new Bundle();
-                bundle.putString("type","micro");
+
                 bundle.putString("aidi",aidi); // Put anything what you want
 
-                RestoListFragment fragment2 = new RestoListFragment();
+                RestoFragment fragment2 = new RestoFragment();
                 fragment2.setArguments(bundle);
 
                 ((AppCompatActivity) mContext).getSupportFragmentManager()
@@ -66,13 +72,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Daftar
     }
 
     public class DaftarViewHolder extends RecyclerView.ViewHolder{
-        private TextView text_tv;
-
-        public DaftarViewHolder(View itemView) {
-            super(itemView);
-            text_tv = (TextView) itemView.findViewById(R.id.textView26);
-
-
+        private TextView name_tv,desc_tv,range_tv;
+        ImageView gambar_iv;
+        public DaftarViewHolder(View orderView) {
+            super(orderView);
+            name_tv = orderView.findViewById(R.id.textView12);
+            desc_tv = orderView.findViewById(R.id.textView13);
+            range_tv = orderView.findViewById(R.id.textView14);
+            gambar_iv = orderView.findViewById(R.id.imageView8);
         }
     }
 }

@@ -1,15 +1,18 @@
 package com.antiklu.aplikasi.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.antiklu.aplikasi.R;
 import com.antiklu.aplikasi.model.SliderModel;
+import com.antiklu.aplikasi.prakmen.RestoListFragment;
 import com.antiklu.aplikasi.settings.Server;
 import com.squareup.picasso.Picasso;
 
@@ -37,7 +40,27 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.DaftarView
     public void onBindViewHolder(DaftarViewHolder holder, int position) {
 
         Picasso.get().load(Server.DATA_URL + "carousel/" + dataList.get(position).getGambar()).into(holder.gambar_iv);
+        final String aidi = dataList.get(position).getId();
         //HANDLE ONCLICK
+
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+
+                Bundle bundle = new Bundle();
+                bundle.putString("type","c");
+                bundle.putString("aidi",aidi); // Put anything what you want
+
+                RestoListFragment fragment2 = new RestoListFragment();
+                fragment2.setArguments(bundle);
+
+                ((AppCompatActivity) mContext).getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fl_container, fragment2,"backtohome")
+                        .commit();
+            }
+        });
     }
 
     @Override

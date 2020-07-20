@@ -22,6 +22,7 @@ import com.android.volley.toolbox.Volley;
 import com.antiklu.aplikasi.prakmen.AccountFragment;
 import com.antiklu.aplikasi.prakmen.HomeFragment;
 import com.antiklu.aplikasi.prakmen.OrderFragment;
+import com.antiklu.aplikasi.prakmen.RestoListFragment;
 import com.antiklu.aplikasi.settings.Client;
 import com.antiklu.aplikasi.settings.Server;
 
@@ -150,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
 
                             } else {
                                 Toast.makeText(getApplicationContext(),
-                                        "Gagal Update Lokasi" + message , Toast.LENGTH_LONG).show();
+                                        "Gagal Update Lokasi . Jarak Resto mungkin tidak ada atau kurang akurat" + message , Toast.LENGTH_LONG).show();
                             }
 
 
@@ -329,6 +330,10 @@ public class MainActivity extends AppCompatActivity {
         if (myFragment2 != null && myFragment2.isVisible()) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, new HomeFragment(), "home").commit();
         }
+    Fragment myFragment2x = getSupportFragmentManager().findFragmentByTag("backtohome");
+    if (myFragment2x != null && myFragment2x.isVisible()) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, new HomeFragment(), "home").commit();
+    }
         Fragment myFragment3 = getSupportFragmentManager().findFragmentByTag("backtoaccount");
         if (myFragment3 != null && myFragment3.isVisible()) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, new AccountFragment(), "account").commit();
@@ -337,6 +342,10 @@ public class MainActivity extends AppCompatActivity {
         if (myFragment4 != null && myFragment4.isVisible()) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, new OrderFragment(), "backtoaccount").commit();
         }
+    Fragment myFragment4x = getSupportFragmentManager().findFragmentByTag("backtorestolist");
+    if (myFragment4x != null && myFragment4x.isVisible()) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, new RestoListFragment(), "backtohome").commit();
+    }
 
 
         //super.onBackPressed();

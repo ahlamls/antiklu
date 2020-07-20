@@ -94,7 +94,8 @@ public class OrderFragment extends Fragment {
 
             @Override
             public void onClick(View view){
-                HomeFragment fragment2 = new HomeFragment();
+
+                AccountFragment fragment2 = new AccountFragment();
                 getActivity().getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fl_container, fragment2,"backtoaccount")

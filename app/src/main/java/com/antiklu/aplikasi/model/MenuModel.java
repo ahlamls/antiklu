@@ -1,19 +1,19 @@
 package com.antiklu.aplikasi.model;
 
-public class OrderMenuModel {
+public class MenuModel {
     private String id;
     private String name;
-    private String info;
-    private int count;
+    private String desc;
+    private String gambar;
     private long price;
     private long promoprice;
 
 
-    public OrderMenuModel(String id, String name,String info,int count,long price,long promoprice) {
+    public MenuModel(String id, String name, String desc , String gambar, long price,long promoprice) {
         this.id = id;
         this.name = name;
-        this.info = info;
-        this.count = count;
+        this.desc = desc;
+        this.gambar = gambar;
         this.price = price;
         this.promoprice = promoprice;
     }
@@ -34,20 +34,28 @@ public class OrderMenuModel {
         this.name = name;
     }
 
-    public String getInfo() {
-        return info;
+    public String getDesc() {
+        return desc;
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
-    public int getCount() {
-        return count;
+    public long getPromoprice() {
+        return promoprice;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setPromoprice(long promoprice) {
+        this.promoprice = promoprice;
+    }
+
+    public String getGambar() {
+        return gambar;
+    }
+
+    public void setGambar(String gambar) {
+        this.gambar = gambar;
     }
 
     public long getPrice() {

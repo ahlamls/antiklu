@@ -1,10 +1,9 @@
 package com.antiklu.aplikasi.prakmen;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,11 +12,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,10 +32,11 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.antiklu.aplikasi.R;
 import com.antiklu.aplikasi.SpawnActivity;
-import com.antiklu.aplikasi.adapter.OrderMenuAdapter;
-import com.antiklu.aplikasi.model.OrderMenuModel;
+import com.antiklu.aplikasi.adapter.MenuAdapter;
+import com.antiklu.aplikasi.model.MenuModel;
 import com.antiklu.aplikasi.settings.Client;
 import com.antiklu.aplikasi.settings.Server;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,9 +45,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static com.antiklu.aplikasi.SpawnActivity.my_shared_preferences;
 
-public class OrderStatusFragment extends Fragment {
+public class RestoFragment extends Fragment {
 
     SharedPreferences sharedpreferences;
     Boolean session = false;
@@ -52,12 +56,12 @@ public class OrderStatusFragment extends Fragment {
     RecyclerView slider;
     TextView title_tv;
 
-    private OrderMenuAdapter adapter;
-    private ArrayList<OrderMenuModel> mahasiswaArrayList;
+    private MenuAdapter adapter;
+    private ArrayList<MenuModel> mahasiswaArrayList;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_orderstatus, container, false);
+        View view = inflater.inflate(R.layout.fragment_resto, container, false);
 
         Bundle bundle = this.getArguments();
 
@@ -65,7 +69,7 @@ public class OrderStatusFragment extends Fragment {
             //Toast.makeText(getActivity(),"Aidi : " + String.valueOf(bundle.getInt("aidi")),Toast.LENGTH_SHORT).show();
             aidi = bundle.getString("aidi");
 
-            if (aidi == "") {
+            if (aidi.equals("")) {
                 Toast.makeText(getActivity(),"Error . -2.2",Toast.LENGTH_LONG).show();
 
             }
@@ -76,8 +80,12 @@ public class OrderStatusFragment extends Fragment {
 
     }
 
-    TextView textView69,textView26,textView21,textView23,textView23x,textView25,textView6969;
-    Button cancel_btn;
+    TextView textView5,restodesc,desc;
+    float longitude,latitude;
+    ImageView imageView10,imageView6;
+    NestedScrollView nsv;
+    Button button2;
+    ProgressBar progressBar;
     LinearLayout ll;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -93,17 +101,16 @@ public class OrderStatusFragment extends Fragment {
         title_tv = getView().findViewById(R.id.textView5);
         title_tv.setText("Loading...");
 
-        textView69 = getView().findViewById(R.id.textView69);
-        textView21 = getView().findViewById(R.id.textView21);
-        textView23 = getView().findViewById(R.id.textView23);
-        textView23x = getView().findViewById(R.id.textView23x);
-        textView25 = getView().findViewById(R.id.textView25);
-        textView26 = getView().findViewById(R.id.textView26);
-        textView6969 = getView().findViewById(R.id.textView6969);
+        progressBar = getView().findViewById(R.id.progressBar);
+        restodesc = getView().findViewById(R.id.restodesc);
+        restodesc.setText("");
+        desc = getView().findViewById(R.id.desc);
 
-        slider = getView().findViewById(R.id.rv);
 
-        cancel_btn = getView().findViewById(R.id.cancel_btn);
+        slider = getView().findViewById(R.id.menurv);
+
+        button2 = getView().findViewById(R.id.button2);
+        button2.setVisibility(View.GONE);
 
 
         ImageView backImage = getView().findViewById(R.id.backImage);
@@ -112,19 +119,28 @@ public class OrderStatusFragment extends Fragment {
 
             @Override
             public void onClick(View view){
-                AccountFragment fragment2 = new AccountFragment();
-                getActivity().getSupportFragmentManager()
+                Bundle bundle = new Bundle();
+
+
+                HomeFragment fragment2 = new HomeFragment();
+                fragment2.setArguments(bundle);
+
+                ((AppCompatActivity) getContext()).getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.fl_container, fragment2,"backtohome")
+                        .replace(R.id.fl_container, fragment2,"home")
                         .commit();
             }
 
 
         });
+        imageView6 = getView().findViewById(R.id.imageView6);
+        imageView10 = getView().findViewById(R.id.imageView10);
 
-        ll = getView().findViewById(R.id.ll);
 
-        ll.setVisibility(GONE);
+        nsv = getView().findViewById(R.id.nsv);
+
+        nsv.setVisibility(GONE);
+        progressBar.setVisibility(VISIBLE);
         addDatax();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(),RecyclerView.VERTICAL,false);
         slider.setLayoutManager(layoutManager);
@@ -144,7 +160,7 @@ public class OrderStatusFragment extends Fragment {
         adapter = new SurveyAdapter(mahasiswaArrayList);
         recyclerViewx.setAdapter(adapter);
 */
-        String url = Server.URL + "getorder.php?id=" + Client.bangsatkau(fuid) + "&oid=" + Client.bangsatkau(aidi) ;
+        String url = Server.URL + "getmenulist.php?id=" + Client.bangsatkau(fuid) + "&rid=" + Client.bangsatkau(aidi) ;
         Log.e("OrderFrag",url);
 
         StringRequest strReq = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
@@ -165,72 +181,51 @@ public class OrderStatusFragment extends Fragment {
                             JSONObject row = jObj.getJSONObject(i);
                             String aidi = row.getString("id");
                             String name = row.getString("name");
-                            String info = row.getString("info");
-                            int count = row.getInt("count");
+                            String info = row.getString("desc");
+                            String gambar = row.getString("gambar");
+                            long promoprice = row.getLong("promoprice");
                             long price = row.getLong("price");
-                            Log.e("RankFrag", aidi + name + info + count + price);
-                            mahasiswaArrayList.add(new OrderMenuModel(aidi,name,info,count,price,price));
+                            Log.e("RankFrag", aidi + name + info + gambar + price + promoprice);
+                            mahasiswaArrayList.add(new MenuModel(aidi,name,info,gambar,price,promoprice));
                         }
 
-                        String id = jObjx.getString("id");
-                        String waktu = jObjx.getString("waktu");
-                        String driver = jObjx.getString("driver");
-                        String status = jObjx.getString("status");
-                        String alamat = jObjx.getString("alamat");
-                        String jarak = jObjx.getString("jarak");
-                        String ongkir  =jObjx.getString("ongkir");
-                        String price = jObjx.getString("price");
-                        int cancelable = jObjx.getInt("cancelable");
-                        if (cancelable == 1) {
-                            cancel_btn.setVisibility(View.VISIBLE);
-                        } else {
-                            cancel_btn.setVisibility(View.GONE);
-                        }
-                        cancel_btn.setOnClickListener(new View.OnClickListener() {
+                        String name= jObjx.getString("name");
+                        String deskripsi = jObjx.getString("desc");
+                        String gambar = jObjx.getString("gambar");
+                        longitude = jObjx.getLong("longitude");
+                        latitude = jObjx.getLong("latitude");
+                        float jarak = jObjx.getInt("jarak");
+                        long ongkir = jObjx.getLong("ongkir");
 
-                            public void onClick(View v) {
-                                AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
-                                builder1.setMessage("Apakah kamu yakin akan membatalkan order ini?");
-                                builder1.setCancelable(true);
-                                builder1.setTitle("Konfirmasi Cancel");
-                                builder1.setPositiveButton(
-                                        "Ya",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                Kensel();
-                                                dialog.cancel();
-                                            }
-                                        });
-
-                                builder1.setNegativeButton(
-                                        "Tidak",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                dialog.cancel();
-                                            }
-                                        });
-
-                                AlertDialog alert11 = builder1.create();
-                                alert11.show();
-
-
-                            }
-                        });
                         ///////////////////////
-                        textView69.setText("Waktu : " + waktu);
-                        textView26.setText("Nama Driver : " + driver);
-                        textView21.setText(status);
-                        textView23.setText(alamat);
-                        textView23x.setText("Jarak : " + jarak + " km");
-                        textView25.setText("Ongkir : Rp " +  ongkir);
-                        textView6969.setText("Rp " +  price);
+                       title_tv.setText(name);
+                       restodesc.setText("Jarak : "+jarak + "km | Estimisasi Ongkir Rp " + ongkir);
+                       desc.setText(deskripsi);
+                        Picasso.get().load(Server.DATA_URL + "resto/" + gambar).into(imageView6);
+                        imageView10.setOnClickListener(new View.OnClickListener(){
 
+                            @Override
+                            public void onClick(View view){
+                                Uri gmmIntentUri = Uri.parse("geo:" +  String.valueOf(latitude) +"," + String.valueOf(longitude));
+                                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                                mapIntent.setPackage("com.google.android.apps.maps");
+                                if (mapIntent.resolveActivity(getContext().getPackageManager()) != null) {
+                                    startActivity(mapIntent);
+                                } else {
+                                    Toast.makeText(getContext(),"Gagal Membuka Maps . pastikan Google Maps terpasang di hp anda",Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+
+                        });
                         //risaykel piyu
 
-                        adapter = new OrderMenuAdapter(mahasiswaArrayList, getActivity());
+                        adapter = new MenuAdapter(mahasiswaArrayList, getActivity(),getLayoutInflater());
                         slider.setAdapter(adapter);
 //                        content_ll.setVisibility(View.VISIBLE);
-//                        progressBar.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.GONE);
+                        nsv.setVisibility(VISIBLE);
+
 
                         //share_btn.setVisibility(View.VISIBLE);
                         // Check for error node in json
@@ -238,7 +233,7 @@ public class OrderStatusFragment extends Fragment {
                         // Log.e("Successfully Login!", jObj.toString());
 
 
-                       doneLoading();
+                        postLoading();
 
                         /*Toast.makeText(getActivity(),
                                 jObj.getString("ReffFrag"), Toast.LENGTH_LONG).show();*/
@@ -273,9 +268,8 @@ public class OrderStatusFragment extends Fragment {
 
     }
 
-    void doneLoading() {
-        title_tv.setText("Detail Order #" + aidi);
-        ll.setVisibility(View.VISIBLE);
+    void postLoading() {
+//load tombol
     }
 
     void Kensel() {
